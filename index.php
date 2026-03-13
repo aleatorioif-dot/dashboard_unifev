@@ -31,11 +31,7 @@
                 <article>
                     <h2>Módulo de Usuários</h2>
                     <p>Gerencie os acessos e permissões do sistema nesta área.</p>
-<<<<<<< HEAD
                     <a href="#" class="btn">Acessar</a>
-=======
-                    <a href="usuarios.php" class="btn">Acessar</a>
->>>>>>> b65ac04 (feat: implementada tabela de gestão de usuários)
                 </article>
 
                 <article>
