@@ -4,18 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Completo</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dash.css">
 </head>
 <body>
 
-    <div class="dashboard-container">
-        
-        <nav>
-            <ul>
-                <li><a href="#">Início</a></li>
-                <li><a href="#">Projetos</a></li>
-                <li><a href="#">Relatórios</a></li>
-                <li><a href="#">Configurações</a></li>
+    <div class="dashboard-container"> <nav class="sidebar"> <ul>
+                <li><a href="index.php"><i class="fa-solid fa-house"></i> Início</a></li>
+                <li><a href="#"><i class="fa-solid fa-folder"></i> Projetos</a></li>
+                <li><a href="#"><i class="fa-solid fa-chart-line"></i> Relatórios</a></li>
+                <li><a href="#"><i class="fa-solid fa-gear"></i> Configurações</a></li>
             </ul>
 
             <div class="perfil-usuario">
@@ -31,7 +29,7 @@
                 <article>
                     <h2>Módulo de Usuários</h2>
                     <p>Gerencie os acessos e permissões do sistema nesta área.</p>
-                    <a href="#" class="btn">Acessar</a>
+                    <a href="usuarios.php" class="btn">Acessar</a>
                 </article>
 
                 <article>
