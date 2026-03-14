@@ -305,3 +305,46 @@ article {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.btn-save {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-save:hover {
+    background-color: #219150;
+}
+
+.btn-save i {
+    margin-right: 8px; /* Espaço para o ícone de disquete */
+}
+
+.btn-cancel {
+    text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+/* DESAFIO: Efeito de hover para o link cancelar */
+.btn-cancel:hover {
+    color: #e74c3c; /* Muda para vermelho no hover */
+}
+
+.btn-cancel i {
+    margin-right: 5px;
+}
