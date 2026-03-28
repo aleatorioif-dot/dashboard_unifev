@@ -378,3 +378,129 @@ table tbody tr:hover {
 
 .ativa { background-color: #d4edda; color: #155724; }
 .inativa { background-color: #f8d7da; color: #721c24; }
+
+/* =========================================
+   ESTILOS ADICIONAIS PARA O LOGIN 
+   (Não mexem no Dashboard)
+   ========================================= */
+
+/* Quando o body for de login, ele ignora o flex-direction: column do dash */
+body.body-login {
+    display: flex !important;
+    flex-direction: row !important; /* Força ficar lado a lado */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #dfdfdf;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* Container do Login */
+.login-main-container {
+    width: 900px;
+    height: 550px;
+    display: flex;
+    background-color: #fff;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Lado do Formulário */
+.login-left-side {
+    flex: 1;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-left-side h2 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.login-input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: none;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    outline: none;
+}
+
+.login-btn-green {
+    width: 100%;
+    padding: 15px;
+    background-color: #4664b8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Lado do Welcome (Verde) */
+.login-welcome-side {
+    flex: 1;
+    background: linear-gradient(135deg, #4664b8 0%, #2b5672 100%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.login-btn-outline {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Ícones Sociais */
+.login-social-icons {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.login-icon-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #2c3e50;
+    font-size: 16px;
+    padding: 5px;
+    transition: color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-icon:hover {
+    color: #004a8d;
+}
+
+.btn-icon .fa-trash:hover {
+    color: #e74c3c; /* Vermelho ao deletar */
+}

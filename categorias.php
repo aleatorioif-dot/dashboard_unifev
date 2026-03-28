@@ -2,8 +2,9 @@
 // 1. Importa a conexão com o banco de dados
 include 'conexao.php';
 
-// 2. Busca os usuários direto do MySQL
-$sql = "SELECT * FROM usuarios ORDER BY id ASC";
+// 2. Busca as categorias direto do MySQL
+// Ajustei a tabela para 'categorias'
+$sql = "SELECT * FROM categorias ORDER BY id ASC";
 $resultado = $conn->query($sql);
 ?>
 
@@ -12,7 +13,7 @@ $resultado = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Usuários</title>
+    <title>Gestão de Categorias</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dash.css">
 </head>
@@ -25,11 +26,11 @@ $resultado = $conn->query($sql);
     <main class="content">
         <div class="header-content" style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <h2>Gestão de Usuários</h2>
-                <p>Visualize e gerencie as permissões dos usuários.</p>
+                <h2>Gestão de Categorias</h2>
+                <p>Organize e gerencie as categorias do sistema.</p>
             </div>
-            <a href="cad-usuarios.php" class="btn-save" style="text-decoration: none;">
-                <i class="fa-solid fa-user-plus"></i> Novo Usuário
+            <a href="cad-categorias.php" class="btn-save" style="text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> Nova Categoria
             </a>
         </div>
 
@@ -43,9 +44,9 @@ $resultado = $conn->query($sql);
             <table>
                 <thead>
                     <tr>
-                        <th>Nº</th> <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Acesso</th>
+                        <th>Nº</th> 
+                        <th>Nome da Categoria</th>
+                        <th>Descrição</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
@@ -54,27 +55,28 @@ $resultado = $conn->query($sql);
                     <?php 
                     $i = 1; 
                     
-                    if ($resultado->num_rows > 0) {
-                        while($user = $resultado->fetch_assoc()) { 
+                    if ($resultado && $resultado->num_rows > 0) {
+                        while($cat = $resultado->fetch_assoc()) { 
                     ?>
                     <tr>
                         <td><?php echo $i++; ?></td> 
-                        <td><?php echo $user['nome']; ?></td>
-                        <td><?php echo $user['email']; ?></td>
-                        <td><?php echo $user['acesso']; ?></td>
+                        <td><strong><?php echo $cat['nome']; ?></strong></td>
+                        <td><?php echo $cat['descricao'] ?? '---'; ?></td>
                         <td>
-                            <span class="badge <?php echo ($user['status'] == 'Ativo') ? 'ativa' : 'inativa'; ?>">
-                                <?php echo $user['status']; ?>
+                            <span class="badge <?php echo ($cat['status'] == 'Ativo') ? 'ativa' : 'inativa'; ?>">
+                                <?php echo $cat['status']; ?>
                             </span>
                         </td>
                         <td>
-                            <a href="edit-user.php?id=<?php echo $user['id']; ?>" class="btn-icon"><i class="fa-solid fa-pen"></i></a>
-
-                            <a href="processar-status.php?id=<?php echo $user['id']; ?>&status=<?php echo $user['status']; ?>" class="btn-icon">
-                                <i class="fa-solid fa-eye"></i>
+                            <a href="edit-categoria.php?id=<?php echo $cat['id']; ?>" class="btn-icon">
+                                <i class="fa-solid fa-pen"></i>
                             </a>
 
-                            <a href="processar-excluir.php?id=<?php echo $user['id']; ?>" class="btn-icon" onclick="return confirm('Deseja excluir?')">
+                            <a href="processar-status-cat.php?id=<?php echo $cat['id']; ?>&status=<?php echo $cat['status']; ?>" class="btn-icon">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </a>
+
+                            <a href="processar-excluir-cat.php?id=<?php echo $cat['id']; ?>" class="btn-icon" onclick="return confirm('Deseja excluir esta categoria?')">
                                 <i class="fa-solid fa-trash" style="color: #e74c3c;"></i>
                             </a>
                         </td>
@@ -82,7 +84,7 @@ $resultado = $conn->query($sql);
                     <?php 
                         } 
                     } else {
-                        echo "<tr><td colspan='6'>Nenhum usuário encontrado.</td></tr>";
+                        echo "<tr><td colspan='5'>Nenhuma categoria encontrada.</td></tr>";
                     }
                     ?>
                 </tbody>

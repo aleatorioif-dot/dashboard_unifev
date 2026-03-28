@@ -15,17 +15,28 @@
         <main>
             <h1>Painel Administrativo</h1>
             <section class="container-cards">
+
                 <article>
-                    <h2>Módulo de Usuários</h2>
-                    <p>Gerencie os acessos e permissões do sistema nesta área.</p>
+                    <i class="fas fa-tags fa-2x"></i>
+                    <h2>Categorias</h2>
+                    <p>Gerencie as categorias das suas postagens.</p>
+                    <a href="categorias.php" class="btn">Acessar</a>
+                </article>
+
+                <article>
+                    <i class="fas fa-file-alt fa-2x"></i>
+                    <h2>Postagens</h2>
+                    <p>Crie, edite ou remova artigos e conteúdos.</p>
+                    <a href="postagens.php" class="btn">Acessar</a>
+                </article>
+
+                <article>
+                    <i class="fas fa-user-cog fa-2x"></i>
+                    <h2>Usuários</h2>
+                    <p>Controle de perfis, níveis de acesso e permissões.</p>
                     <a href="usuarios.php" class="btn">Acessar</a>
                 </article>
-                
-                <article>
-                    <h2>Projetos Ativos</h2>
-                    <p>Acompanhe o status e os prazos de todos os projetos.</p>
-                    <a href="#" class="btn">Acessar</a>
-                </article>
+
             </section>
         </main>
     </div>

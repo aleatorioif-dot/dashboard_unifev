@@ -2,8 +2,8 @@
 // 1. Importa a conexão com o banco de dados
 include 'conexao.php';
 
-// 2. Busca os usuários direto do MySQL
-$sql = "SELECT * FROM usuarios ORDER BY id ASC";
+// 2. Busca as postagens do banco
+$sql = "SELECT * FROM postagens ORDER BY id DESC";
 $resultado = $conn->query($sql);
 ?>
 
@@ -12,7 +12,7 @@ $resultado = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Usuários</title>
+    <title>Gestão de Postagens</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dash.css">
 </head>
@@ -25,11 +25,11 @@ $resultado = $conn->query($sql);
     <main class="content">
         <div class="header-content" style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <h2>Gestão de Usuários</h2>
-                <p>Visualize e gerencie as permissões dos usuários.</p>
+                <h2>Gestão de Postagens</h2>
+                <p>Crie, edite e publique conteúdos no seu site.</p>
             </div>
-            <a href="cad-usuarios.php" class="btn-save" style="text-decoration: none;">
-                <i class="fa-solid fa-user-plus"></i> Novo Usuário
+            <a href="cad-postagem.php" class="btn-save" style="text-decoration: none;">
+                <i class="fa-solid fa-file-pen"></i> Nova Postagem
             </a>
         </div>
 
@@ -43,9 +43,9 @@ $resultado = $conn->query($sql);
             <table>
                 <thead>
                     <tr>
-                        <th>Nº</th> <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Acesso</th>
+                        <th>Nº</th> 
+                        <th>Título</th>
+                        <th>Data de Criação</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
@@ -53,28 +53,28 @@ $resultado = $conn->query($sql);
                 <tbody>
                     <?php 
                     $i = 1; 
-                    
-                    if ($resultado->num_rows > 0) {
-                        while($user = $resultado->fetch_assoc()) { 
+                    if ($resultado && $resultado->num_rows > 0) {
+                        while($post = $resultado->fetch_assoc()) { 
                     ?>
                     <tr>
                         <td><?php echo $i++; ?></td> 
-                        <td><?php echo $user['nome']; ?></td>
-                        <td><?php echo $user['email']; ?></td>
-                        <td><?php echo $user['acesso']; ?></td>
+                        <td><strong><?php echo $post['titulo']; ?></strong></td>
+                        <td><?php echo date('d/m/Y H:i', strtotime($post['data_criacao'])); ?></td>
                         <td>
-                            <span class="badge <?php echo ($user['status'] == 'Ativo') ? 'ativa' : 'inativa'; ?>">
-                                <?php echo $user['status']; ?>
+                            <span class="badge <?php echo ($post['status'] == 'Ativo') ? 'ativa' : 'inativa'; ?>">
+                                <?php echo $post['status']; ?>
                             </span>
                         </td>
                         <td>
-                            <a href="edit-user.php?id=<?php echo $user['id']; ?>" class="btn-icon"><i class="fa-solid fa-pen"></i></a>
+                            <a href="edit-postagem.php?id=<?php echo $post['id']; ?>" class="btn-icon">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
 
-                            <a href="processar-status.php?id=<?php echo $user['id']; ?>&status=<?php echo $user['status']; ?>" class="btn-icon">
+                            <a href="processar-status-post.php?id=<?php echo $post['id']; ?>&status=<?php echo $post['status']; ?>" class="btn-icon">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
 
-                            <a href="processar-excluir.php?id=<?php echo $user['id']; ?>" class="btn-icon" onclick="return confirm('Deseja excluir?')">
+                            <a href="processar-excluir-post.php?id=<?php echo $post['id']; ?>" class="btn-icon" onclick="return confirm('Deseja excluir esta postagem?')">
                                 <i class="fa-solid fa-trash" style="color: #e74c3c;"></i>
                             </a>
                         </td>
@@ -82,7 +82,7 @@ $resultado = $conn->query($sql);
                     <?php 
                         } 
                     } else {
-                        echo "<tr><td colspan='6'>Nenhum usuário encontrado.</td></tr>";
+                        echo "<tr><td colspan='5'>Nenhuma postagem encontrada.</td></tr>";
                     }
                     ?>
                 </tbody>
