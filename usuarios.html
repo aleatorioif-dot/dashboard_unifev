@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários — DashUnicev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <main class="content">
+    <div class="header-content" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h2><i class="fa-solid fa-users"></i> Gestão de Usuários</h2>
+        <p>Visualize e gerencie as permissões dos usuários.</p>
+      </div>
+      <a href="cad-usuarios.html" class="btn-save">
+        <i class="fa-solid fa-user-plus"></i> Novo Usuário
+      </a>
+    </div>
+
+    <div id="alerta" style="display:none"></div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Nº</th><th>Nome</th><th>E-mail</th><th>Acesso</th><th>Status</th><th>Criado</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="db.js"></script>
+<script src="menu.js"></script>
+<script>
+  // Mostra mensagem da URL (?msg=editado etc.)
+  const msgs = {
+    editado:  ['success', 'fa-check-circle',    'Usuário atualizado com sucesso!'],
+    excluido: ['danger',  'fa-trash-can',        'Usuário excluído.'],
+    cadastro: ['success', 'fa-check-circle',     'Usuário cadastrado com sucesso!'],
+    status:   ['warning', 'fa-circle-info',      'Status alterado.'],
+    erro:     ['danger',  'fa-triangle-exclamation', 'Ocorreu um erro.'],
+  };
+  const p = new URLSearchParams(location.search).get('msg');
+  if (p && msgs[p]) {
+    const [tipo, icone, texto] = msgs[p];
+    document.getElementById('alerta').innerHTML =
+      `<div class="alert alert-${tipo}"><i class="fa-solid ${icone}"></i> ${texto}</div>`;
+    document.getElementById('alerta').style.display = 'block';
+    history.replaceState({}, '', 'usuarios.html');
+    setTimeout(() => document.getElementById('alerta').style.display = 'none', 3500);
+  }
+
+  function render() {
+    const lista = DB.getUsuarios();
+    document.getElementById('tbody').innerHTML = lista.length
+      ? lista.map((u, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${u.nome}</td>
+          <td>${u.email}</td>
+          <td>${u.acesso}</td>
+          <td><span class="badge ${u.status === 'Ativo' ? 'ativa' : 'inativa'}">${u.status}</span></td>
+          <td>${u.criado || '—'}</td>
+          <td>
+            <a href="edit-user.html?id=${u.id}" class="btn-icon" title="Editar"><i class="fa-solid fa-pen"></i></a>
+            <button class="btn-icon" title="Alternar status" onclick="toggleStatus(${u.id})"><i class="fa-solid fa-eye"></i></button>
+            <button class="btn-icon danger" title="Excluir" onclick="excluir(${u.id}, '${u.nome.replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('')
+      : '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted)">Nenhum usuário encontrado.</td></tr>';
+  }
+
+  function toggleStatus(id) {
+    DB.toggleStatusUsuario(id);
+    render();
+  }
+
+  function excluir(id, nome) {
+    if (!confirm(`Deseja excluir o usuário "${nome}"?`)) return;
+    DB.excluirUsuario(id);
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>

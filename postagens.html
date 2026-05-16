@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Postagens — DashUnicev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <main class="content">
+    <div class="header-content" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h2><i class="fa-solid fa-newspaper"></i> Postagens</h2>
+        <p>Gerencie as publicações do sistema.</p>
+      </div>
+      <a href="cad-postagem.html" class="btn-save">
+        <i class="fa-solid fa-plus"></i> Nova Postagem
+      </a>
+    </div>
+
+    <div id="alerta" style="display:none"></div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr><th>Nº</th><th>Título</th><th>Categoria</th><th>Status</th><th>Criado</th><th>Ações</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="db.js"></script>
+<script src="menu.js"></script>
+<script>
+  const msgs = {
+    editado:  ['success', 'fa-check-circle', 'Postagem atualizada!'],
+    excluido: ['danger',  'fa-trash-can',    'Postagem excluída.'],
+    cadastro: ['success', 'fa-check-circle', 'Postagem criada!'],
+    status:   ['warning', 'fa-circle-info',  'Status alterado.'],
+  };
+  const p = new URLSearchParams(location.search).get('msg');
+  if (p && msgs[p]) {
+    const [tipo, icone, texto] = msgs[p];
+    document.getElementById('alerta').innerHTML =
+      `<div class="alert alert-${tipo}"><i class="fa-solid ${icone}"></i> ${texto}</div>`;
+    document.getElementById('alerta').style.display = 'block';
+    history.replaceState({}, '', 'postagens.html');
+    setTimeout(() => document.getElementById('alerta').style.display = 'none', 3500);
+  }
+
+  function render() {
+    const lista = DB.getPostagens();
+    const cats  = DB.getCategorias();
+    document.getElementById('tbody').innerHTML = lista.length
+      ? lista.map((post, i) => {
+          const cat = cats.find(c => c.id === post.id_cat);
+          return `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${post.titulo}</td>
+            <td style="color:var(--muted)">${cat ? cat.nome : '—'}</td>
+            <td><span class="badge ${post.status === 'Ativo' ? 'ativa' : 'inativa'}">${post.status}</span></td>
+            <td>${post.criado || '—'}</td>
+            <td>
+              <a href="edit-postagem.html?id=${post.id}" class="btn-icon" title="Editar"><i class="fa-solid fa-pen"></i></a>
+              <button class="btn-icon" title="Alternar status" onclick="toggleStatus(${post.id})"><i class="fa-solid fa-eye"></i></button>
+              <button class="btn-icon danger" title="Excluir" onclick="excluir(${post.id}, '${post.titulo.replace(/'/g,"\\'")}')"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>`;
+        }).join('')
+      : '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted)">Nenhuma postagem encontrada.</td></tr>';
+  }
+
+  function toggleStatus(id) { DB.toggleStatusPostagem(id); render(); }
+
+  function excluir(id, titulo) {
+    if (!confirm(`Deseja excluir a postagem "${titulo}"?`)) return;
+    DB.excluirPostagem(id);
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>

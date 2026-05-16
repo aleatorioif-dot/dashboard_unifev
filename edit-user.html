@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Usuário — DashUnicev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <main class="content">
+    <div class="header-content">
+      <h2><i class="fa-solid fa-user-pen"></i> Editar Usuário</h2>
+      <p id="subtitulo">Carregando...</p>
+    </div>
+
+    <section class="card-form">
+      <div id="alerta" style="display:none"></div>
+
+      <input type="hidden" id="id">
+
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" id="nome">
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="email">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nível de Acesso</label>
+          <select id="acesso">
+            <option value="Usuário">Usuário</option>
+            <option value="Editor">Editor</option>
+            <option value="Administrador">Administrador</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-save" onclick="salvar()">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
+        </button>
+        <a href="usuarios.html" class="btn-cancel">
+          <i class="fa-solid fa-xmark"></i> Cancelar
+        </a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="db.js"></script>
+<script src="menu.js"></script>
+<script>
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) { window.location.href = 'usuarios.html'; }
+
+  const user = DB.getUsuario(id);
+  if (!user) { window.location.href = 'usuarios.html'; }
+
+  // Preenche o formulário com os dados atuais
+  document.getElementById('id').value     = user.id;
+  document.getElementById('nome').value   = user.nome;
+  document.getElementById('email').value  = user.email;
+  document.getElementById('subtitulo').textContent = `Alterando dados de: ${user.nome} — ID #${user.id}`;
+
+  const sel = document.getElementById('acesso');
+  for (let opt of sel.options) if (opt.value === user.acesso) opt.selected = true;
+
+  function salvar() {
+    const nome   = document.getElementById('nome').value.trim();
+    const email  = document.getElementById('email').value.trim();
+    const acesso = document.getElementById('acesso').value;
+
+    if (!nome || !email) {
+      mostrarAlerta('danger', 'fa-circle-exclamation', 'Nome e e-mail são obrigatórios.');
+      return;
+    }
+
+    DB.editarUsuario(id, { nome, email, acesso });
+    window.location.href = 'usuarios.html?msg=editado';
+  }
+
+  function mostrarAlerta(tipo, icone, msg) {
+    const el = document.getElementById('alerta');
+    el.innerHTML = `<div class="alert alert-${tipo}"><i class="fa-solid ${icone}"></i> ${msg}</div>`;
+    el.style.display = 'block';
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo Usuário — DashUnicev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <main class="content">
+    <div class="header-content">
+      <h2><i class="fa-solid fa-user-plus"></i> Novo Usuário</h2>
+      <p>Preencha os dados para registrar um novo acesso.</p>
+    </div>
+
+    <section class="card-form">
+      <div id="alerta" style="display:none"></div>
+
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" id="nome" placeholder="Ex: João Silva">
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="email" placeholder="nome@empresa.com">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="senha">
+        </div>
+        <div class="form-group">
+          <label>Nível de Acesso</label>
+          <select id="acesso">
+            <option value="Usuário">Usuário</option>
+            <option value="Editor">Editor</option>
+            <option value="Administrador">Administrador</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-save" onclick="salvar()">
+          <i class="fa-solid fa-floppy-disk"></i> Finalizar Cadastro
+        </button>
+        <a href="usuarios.html" class="btn-cancel">
+          <i class="fa-solid fa-xmark"></i> Cancelar
+        </a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="db.js"></script>
+<script src="menu.js"></script>
+<script>
+  function salvar() {
+    const nome   = document.getElementById('nome').value.trim();
+    const email  = document.getElementById('email').value.trim();
+    const senha  = document.getElementById('senha').value;
+    const acesso = document.getElementById('acesso').value;
+
+    if (!nome || !email || !senha) {
+      mostrarAlerta('danger', 'fa-circle-exclamation', 'Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    const res = DB.criarUsuario({ nome, email, senha, acesso });
+    if (res.ok) {
+      window.location.href = 'usuarios.html?msg=cadastro';
+    } else {
+      mostrarAlerta('danger', 'fa-circle-exclamation', res.msg);
+    }
+  }
+
+  function mostrarAlerta(tipo, icone, msg) {
+    const el = document.getElementById('alerta');
+    el.innerHTML = `<div class="alert alert-${tipo}"><i class="fa-solid ${icone}"></i> ${msg}</div>`;
+    el.style.display = 'block';
+  }
+</script>
+</body>
+</html>

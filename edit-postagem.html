@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Postagem — DashUnicev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <main class="content">
+    <div class="header-content">
+      <h2><i class="fa-solid fa-pen-to-square"></i> Editar Postagem</h2>
+      <p id="subtitulo">Carregando...</p>
+    </div>
+
+    <section class="card-form">
+      <div id="alerta" style="display:none"></div>
+
+      <div class="form-group">
+        <label>Título</label>
+        <input type="text" id="titulo">
+      </div>
+      <div class="form-group">
+        <label>Conteúdo</label>
+        <textarea id="conteudo"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Categoria</label>
+          <select id="id_cat"><option value="">— Selecione —</option></select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="status">
+            <option value="Ativo">Publicado (Ativo)</option>
+            <option value="Inativo">Rascunho (Inativo)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-save" onclick="salvar()">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
+        </button>
+        <a href="postagens.html" class="btn-cancel">
+          <i class="fa-solid fa-xmark"></i> Cancelar
+        </a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="db.js"></script>
+<script src="menu.js"></script>
+<script>
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) window.location.href = 'postagens.html';
+
+  const post = DB.getPostagem(id);
+  if (!post) window.location.href = 'postagens.html';
+
+  // Preenche os campos
+  document.getElementById('titulo').value   = post.titulo;
+  document.getElementById('conteudo').value = post.conteudo;
+  document.getElementById('status').value   = post.status;
+  document.getElementById('subtitulo').textContent = `Editando: ${post.titulo}`;
+
+  // Popula categorias
+  const sel = document.getElementById('id_cat');
+  DB.getCategorias().forEach(c => {
+    sel.innerHTML += `<option value="${c.id}" ${c.id === post.id_cat ? 'selected' : ''}>${c.nome}</option>`;
+  });
+
+  function salvar() {
+    const titulo   = document.getElementById('titulo').value.trim();
+    const conteudo = document.getElementById('conteudo').value.trim();
+    const id_cat   = document.getElementById('id_cat').value;
+    const status   = document.getElementById('status').value;
+
+    if (!titulo || !conteudo) {
+      document.getElementById('alerta').innerHTML =
+        `<div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> Título e conteúdo são obrigatórios.</div>`;
+      document.getElementById('alerta').style.display = 'block';
+      return;
+    }
+
+    DB.editarPostagem(id, { titulo, conteudo, id_cat, status });
+    window.location.href = 'postagens.html?msg=editado';
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — DashUnicev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-box">
+    <h1>Dash<span style="color:var(--accent)">Unifev</span></h1>
+    <p>Acesse com seu e-mail e senha.</p>
+
+    <div id="alerta" style="display:none" class="alert alert-danger">
+      <i class="fa-solid fa-circle-exclamation"></i> <span id="alerta-msg"></span>
+    </div>
+
+    <input type="email"    id="email" class="login-input" placeholder="E-mail">
+    <input type="password" id="senha" class="login-input" placeholder="Senha">
+
+    <button class="btn-save" style="width:100%;justify-content:center;margin-top:4px" onclick="entrar()">
+      <i class="fa-solid fa-right-to-bracket"></i> Entrar
+    </button>
+
+    <p style="margin-top:16px;font-size:12px;color:var(--muted);text-align:center">
+      Padrão: admin@unifev.com / admin123
+    </p>
+  </div>
+</div>
+
+<script src="db.js"></script>
+<script>
+  // Se já estiver logado, vai direto para o index
+  if (DB.getLogado()) window.location.href = 'index.html';
+
+  function entrar() {
+    const email = document.getElementById('email').value.trim();
+    const senha = document.getElementById('senha').value;
+    const res = DB.login(email, senha);
+    if (res.ok) {
+      window.location.href = 'index.html';
+    } else {
+      const a = document.getElementById('alerta');
+      document.getElementById('alerta-msg').textContent = res.msg;
+      a.style.display = 'flex';
+    }
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
+</script>
+</body>
+</html>

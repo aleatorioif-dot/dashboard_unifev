@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Início — DashUnicev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <main class="content">
+    <div class="header-content">
+      <h2><i class="fa-solid fa-house"></i> Visão Geral</h2>
+      <p id="saudacao">Carregando...</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="num" id="s-usuarios">0</div>
+        <div class="lbl"><i class="fa-solid fa-users"></i> Usuários</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="s-categorias">0</div>
+        <div class="lbl"><i class="fa-solid fa-folder"></i> Categorias</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="s-postagens">0</div>
+        <div class="lbl"><i class="fa-solid fa-newspaper"></i> Postagens</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="s-ativos">0</div>
+        <div class="lbl"><i class="fa-solid fa-circle-check"></i> Usuários ativos</div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;">
+      <h3 style="font-family:'Syne',sans-serif;font-size:16px;margin-bottom:16px;">Últimas postagens</h3>
+      <div id="ultimas-postagens"></div>
+    </div>
+  </main>
+</div>
+
+<script src="db.js"></script>
+<script src="menu.js"></script>
+<script>
+  const user = DB.getLogado();
+  document.getElementById('saudacao').textContent = `Bem-vindo, ${user?.nome || ''}!`;
+
+  document.getElementById('s-usuarios').textContent   = DB.getUsuarios().length;
+  document.getElementById('s-categorias').textContent = DB.getCategorias().length;
+  document.getElementById('s-postagens').textContent  = DB.getPostagens().length;
+  document.getElementById('s-ativos').textContent     = DB.getUsuarios().filter(u => u.status === 'Ativo').length;
+
+  const posts = DB.getPostagens().slice(-5).reverse();
+  const cats  = DB.getCategorias();
+  document.getElementById('ultimas-postagens').innerHTML = posts.length
+    ? posts.map(p => {
+        const cat = cats.find(c => c.id === p.id_cat);
+        return `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+            <div>
+              <div style="font-size:14px;font-weight:500">${p.titulo}</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">${cat ? cat.nome : '—'} · ${p.criado}</div>
+            </div>
+            <span class="badge ${p.status === 'Ativo' ? 'ativa' : 'inativa'}">${p.status}</span>
+          </div>`;
+      }).join('')
+    : '<p style="color:var(--muted);font-size:14px">Nenhuma postagem ainda.</p>';
+</script>
+</body>
+</html>
